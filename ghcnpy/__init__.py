@@ -65,7 +65,7 @@ def find_station_id(station_name):
 
   return ghcnd_meta
   
-# Get Metadata of Station (Add Later)
+# Get Metadata of Station (Add Soon)
 #def get_metadata(station):
 #
 #  return None

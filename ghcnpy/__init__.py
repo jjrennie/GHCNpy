@@ -21,7 +21,7 @@ def get_data_station(station):
   outfile=station+".dly"
   return outfile
   
-# Fetch 1 Year of Data (.csv ASCII format)
+#  Fetch 1 Year of Data (.csv ASCII format)
 def get_data_year(year):
   print "\nget data"
   print "year = "+year

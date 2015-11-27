@@ -1,0 +1,24 @@
+Metadata-Version: 1.0
+Name: GHCNpy
+Version: 1.0
+Summary: Package for Analyzing and Displaying weather stations from GHCN-Daily
+Home-page: https://github.com/
+Author: Jared Rennie, Samuel Lillo
+Author-email: jared@cicsnc.org, splillo@ou.edu
+License: New BSD
+Description: GHCNpy
+        ==============
+        
+        GHCNpy pulls in data from the Global Historical Climatology Network - Daily Database
+        ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily
+        
+        
+        Installation
+        ------------
+            python setup.py install (to install)
+        
+        Setup
+        -----
+        
+Keywords: meteorology climatology analysis in_situ
+Platform: UNKNOWN

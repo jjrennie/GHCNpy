@@ -10,19 +10,16 @@ from ftplib import FTP
 import requests as r
 from calendar import monthrange
 import matplotlib as mpl
+#mpl.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
 from datetime import datetime, date
 import matplotlib.colors as colors
 import pylab
 import ghcnpy as gp
-
-#################################################
-# MODULE: plot_temperature
-# Plot Temperature Data for a given station
-#################################################  
+  
+# Temp Plots
 def plot_temperature(station_id,begin_date,end_date):  
-  print "\nPLOTTING TEMPERATURE DATA FOR STATION: ",station_id
 
   # Declare Other Variables
   begin_year=1895
@@ -210,15 +207,9 @@ def plot_temperature(station_id,begin_date,end_date):
   # Save Figure
   plt.savefig(station_id+'_temperature.png', dpi=300)  
   
-  return None
-
-#################################################
-# MODULE: plot_precipitation
-# Plot Accum. Precip Data for a given station
-#################################################  
-def plot_precipitation(station_id):    
-  print "\nPLOTTING PRECIPITATION DATA FOR STATION: ",station_id
+  return
   
+def plot_precipitation(station_id):    
   # Declare Other Variables
   begin_year=1895
   num_elements=1 # PRCP
@@ -418,214 +409,6 @@ def plot_precipitation(station_id):
 
   # Save Figure
   plt.savefig(station_id+'_precipitation.png', dpi=300)
+  plt.show()
     
-  return None
-
-#################################################
-# MODULE: plot_snowfall
-# Plot Accum. Snow Data for a given station
-#################################################  
-def plot_snowfall(station_id):    
-  print "\nPLOTTING SNOWFALL DATA FOR STATION: ",station_id
-  
-  # Declare Other Variables
-  begin_year=1895
-  num_elements=1 # SNOW
-  snow=0
-  num_days=366
-
-  end_year=datetime.now().year
-  num_years=(end_year-begin_year) + 1
-  
-  # Get station metadatafile
-  ghcnd_stations=gp.get_ghcnd_stations()  
-
-  ghcnd_meta = ghcnd_stations[ghcnd_stations[:,0] == station_id]  
-  ghcnd_id=ghcnd_meta[0][0]
-  ghcnd_lat=float(ghcnd_meta[0][1])
-  ghcnd_lon=float(ghcnd_meta[0][2])
-  ghcnd_alt=float(ghcnd_meta[0][3])
-  ghcnd_name=ghcnd_meta[0][5]
-  ghcnd_name = ghcnd_name.strip()
-  ghcnd_name = re.sub(' +',' ',ghcnd_name)
-  ghcnd_name = ghcnd_name.replace(" ","_")  
-  
-  # Grab Data
-  gp.get_data_station(station_id)
-
-  #################################################
-  # Read in GHCN-D Data (Original, QC'd data removed)
-  infile = station_id+".dly"
-  ghcnd_value = np.zeros((num_years,12,31,num_elements),dtype='f')
-
-  file_handle = open(infile, 'r')
-  contents = file_handle.readlines()
-  file_handle.close() 
-
-  valid_end=-9999
-  valid_begin=9999
-  for counter in xrange(len(contents)): 
-
-	element = contents[counter][17:21]
-
-	if element == "SNOW":
-	  element_counter=snow
-	
-	  year = int(contents[counter][11:15])
-	  year_counter = year-begin_year
-	  valid_begin=min(valid_begin,year)
-	  valid_end=max(valid_end,year)
-
-	  month = int(contents[counter][15:17])
-	  month_counter = month-1
-
-	  char=21
-	  for day_counter in xrange(0,31):
-		if contents[counter][char:char+5] != "-9999" and contents[counter][char+6:char+7] == " ":
-		  ghcnd_value[year_counter][month_counter][day_counter][element_counter] = float(contents[counter][char:char+5]) 
-		  last_day=day_counter+1
-		char = char + 8
-
-  # Get day of year for last day with valid data
-  last_day=datetime(year, month, last_day).timetuple().tm_yday
-  last_day=last_day+92 # Shift three months
-  if last_day >=365:
-    last_day=last_day-365
-
-  # Convert from mm to inch
-  ghcnd_value=(ghcnd_value*0.0393701)
-
-  # Get Record / Average Values for every day in year
-  average_snow = np.zeros((num_days),dtype='f')-(9999.0)
-  day_of_year=0
-  day_before=0
-  for month_counter in [9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
-	for day_counter in xrange(0,31):
-	  try:
-		# Check if leap-year date is valid
-		datetime(year=2012,month=month_counter+1,day=day_counter+1)
-
-		average_snow[day_of_year] = day_before + ma.average(ghcnd_value[(valid_begin-begin_year):(valid_end-begin_year),month_counter,day_counter,snow])
-		day_before=average_snow[day_of_year]
-	  
-		day_of_year=day_of_year+1
-	  except:
-		pass 
-
-  #################################################
-  # Create Accumulations 
-  new_year_counter=0
-  snow_accum = np.zeros((num_years+1,num_days),dtype='f')
-  total_accum = np.zeros((num_years+1),dtype='f')
-  for year_counter in xrange(0,num_years):
-	for month_counter in xrange(0,12):
-	  if month_counter==9: # Month Begins in Oct
-		new_year_counter=year_counter+1
-		day_of_year=0
-		day_before=0
-	  for day_counter in xrange(0,31):
-		try:
-		  # Check if date is valid
-		  datetime(year=year_counter+begin_year,month=month_counter+1,day=day_counter+1)
-		  snow_accum[new_year_counter][day_of_year] = day_before + ghcnd_value[year_counter,month_counter,day_counter,snow]
-		  total_accum[new_year_counter]=snow_accum[new_year_counter][day_of_year]
-		  day_before=snow_accum[new_year_counter][day_of_year]
-		  day_of_year=day_of_year+1
-		except:
-		  pass
-	  if month_counter+1==12 and snow_accum[year_counter][365]==0:
-		snow_accum[year_counter][365]=snow_accum[year_counter][364]
-	  
-  #################################################
-  # PLOT
-  # Mask Zero Data before plotting
-  #snow_accum = ma.masked_values(snow_accum, 0.)
-  total_accum = ma.masked_values(total_accum, 0.)
-
-  #Get Some Stats Needed For Plotting
-  x_axis=range(num_days)
-  x_axis_end=range(last_day)
-
-  current_loc = num_years-1
-  current_snow = "%6.2f" % total_accum[current_loc]
-  current_year = current_loc + begin_year
-  current_data=snow_accum[current_loc,0:last_day]
-  current_last=snow_accum[current_loc,last_day]
-
-  max_snow = "%6.2f" % np.max(total_accum)
-  max_loc = np.argmax(total_accum)
-  max_year = max_loc+begin_year
-
-  min_snow = "%6.2f" % np.min(total_accum[np.where(total_accum != 0)])
-  min_loc = np.nanargmin(total_accum)
-  min_year = min_loc+begin_year
-
-  avg_snow = "%6.2f" % average_snow[365]
-
-  # Create Figure
-  fig, ax1 = plt.subplots(figsize=(15, 8), edgecolor='white', facecolor='white', dpi=300)
-
-  # Add grid lines
-  plt.grid(color='black', linestyle='--', linewidth=0.5, alpha=0.3)
-
-  # Plot Accumulated SNOW (Sort by end of year accumulation and plot by range of color)
-  order=np.argsort(snow_accum[:,364])
-  color_pos=np.linspace(0.5,1,num_years)
-  order_counter=0
-  color_counter=0
-  for year_counter in xrange(0,num_years):
-	pos=order[order_counter]
-	if pos != (num_years-1):
-	  plt.plot(x_axis, snow_accum[pos,:], linewidth=0.5, color=colors.rgb2hex(pylab.cm.GnBu(color_pos[color_counter])[0:3]))  
-	  color_counter=color_counter+1
-	order_counter=order_counter+1
-
-  # Overlay Record Max Snow Year
-  if max_loc==current_loc:
-	plt.plot(x_axis_end, snow_accum[max_loc,0:last_day], color='#084081', linewidth=3, label='Max ('+str(max_year-1)+'-'+str(max_year)+': '+str(max_snow)+'")')  
-  else:
-	plt.plot(x_axis, snow_accum[max_loc,:], color='#084081', linewidth=3, label='Max ('+str(max_year-1)+'-'+str(max_year)+': '+str(max_snow)+'")')  
-  
-  # Overlay Record Min Snow Year
-  if min_loc==current_loc:
-	plt.plot(x_axis_end, snow_accum[min_loc,0:last_day], color='#66ff99', linewidth=3, label='Min ('+str(min_year-1)+'-'+str(min_year)+': '+str(min_snow)+'")')
-  else:
-	plt.plot(x_axis, snow_accum[min_loc,:], color='#66ff99', linewidth=3, label='Min ('+str(min_year-1)+'-'+str(min_year)+': '+str(min_snow)+'")')  
-
-  # Overlay Average SNOW
-  plt.plot(x_axis, average_snow[:], color='#e6b800', linewidth=3, markeredgecolor='white', label='Avg ('+str(avg_snow)+'")') 
-
-  # Overlay Current Snow Year
-  plt.plot(x_axis_end, current_data, color='black', linewidth=3, label='Current ('+str(current_year-1)+'-'+str(current_year)+': '+str(current_snow)+'")')    
-  plt.plot(x_axis_end[last_day-1],current_last, marker='o', color='black', markersize=10)
-
-  # Plot Legend
-  plt.legend(bbox_to_anchor=(0., -.102, 1., -1.02), loc=3, ncol=4, mode="expand", borderaxespad=0., fontsize=12)
-
-  # Plot X/Y Limits
-  ymin=0
-  ymax=int(5 * round(float((np.max(snow_accum) + 10))/5))
-  plt.ylim(ymin,ymax)
-  plt.xlim(-5, num_days) 
-
-  # Plot Y-Axis Label
-  plt.yticks(range(ymin, ymax, 10), [r'{}"'.format(x) for x in range(ymin, ymax, 10)], fontsize=10)
-  plt.ylabel(r'Accumulated Snowfall (inches)', fontsize=12)
-
-  # Plot X-Axis Label
-  month_pos=[0,31,60,91,121,152,182,213,244,274,305,335]
-  month_names=["Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep"]
-  plt.xticks(month_pos, month_names, fontsize=10)
-
-  # Plot 2nd Y Axis Labels
-  ax3 = ax1.twinx()
-  plt.yticks(range(ymin, ymax, 10), [r'{}"'.format(x) for x in range(ymin, ymax, 10)], fontsize=10)
-  plt.ylim(ymin, ymax)
-
-  # Plot Title/Subtitle
-  plt.suptitle(station_id+': '+ghcnd_name, fontsize=20)
-  plt.title('LAT= '+str(ghcnd_lat)+' | LON= '+str(ghcnd_lon)+' | ELEV= '+str(int(ghcnd_alt*3.2808399))+'\'', fontsize=15)
-
-  # Save Figure
-  plt.savefig(station_id+'_snowfall.png', dpi=300)    
-  return None
+  return

@@ -68,7 +68,7 @@ def get_data_year(year):
 # Get ghcnd-stations.txt file
 #################################################
 def get_ghcnd_stations():
-  print "\nGRABBING LATEST STATION INVENTORY FILE"
+  print "\nGRABBING LATEST STATION METADATA FILE"
 
   ftp = FTP('ftp.ncdc.noaa.gov')  
   ftp.login()                    
@@ -81,7 +81,26 @@ def get_ghcnd_stations():
   ghcnd_stations= np.genfromtxt(ghcnd_stnfile,delimiter=(11,9,10,7,4,30),dtype=str)
 
   return ghcnd_stations
+
+#################################################
+# MODULE: get_ghcnd_inventory
+# Get ghcnd-stations.txt file
+#################################################
+def get_ghcnd_inventory():
+  print "\nGRABBING LATEST STATION INVENTORY FILE"
+
+  ftp = FTP('ftp.ncdc.noaa.gov')  
+  ftp.login()                    
+  ftp.cwd('pub/data/ghcn/daily')            
+  ftp.retrbinary('RETR ghcnd-inventory.txt', open('ghcnd-inventory.txt', 'wb').write)
+  ftp.quit()
   
+  # Read in GHCND-D INVENTORY File  
+  ghcnd_invfile='ghcnd-inventory.txt'
+  ghcnd_inventory= np.genfromtxt(ghcnd_invfile,delimiter=(11,9,11,4),dtype=str)
+  
+  return ghcnd_inventory
+
 #################################################
 # MODULE: output_to_csv
 # Output to csv (one station per csv)

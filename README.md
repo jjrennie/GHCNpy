@@ -122,18 +122,7 @@ Search for a station in GHCN-D
 
 Get Metadata of a station in GHCN-D, using both the metadata file, and the Historical Observing Metadata Repository (HOMR).
 
-The result are the following metadata information (if available)
-- Station Latitude
-- Station Longitude
-- Station Name
-- Station Elevation (meters)
-- US State
-- Climate Division
-- US County
-- National Weather Service Office
-- COOP ID
-- WBAN ID
-
+The result are the following metadata information (if available): Station Latitude, Station Longitude, Station Name, Station Elevation (meters), US State, Climate Division, US County, National Weather Service Office, COOP ID, WBAN ID
 
     get_metadata(station_id)
     station_id = GHCN-D 12-digit id
@@ -142,52 +131,34 @@ __plotting.py (Plot the data):__
 
 Plot Temperature Time Series
 
-This plots "New York Times" style temperature plots. For a givin station and period, plots the following data
-- Raw TMAX/TMIN for each day
-- Average TMAX/TMIN for each day
-- Record TMAX/TMIN for each day
-- Daily Records (If Raw meets or exceeds record)
-
+This plots "New York Times" style temperature plots. For a givin station and period, plots Raw, Average, and Record TMAX / TMIN for each day. Also highlights record day, where the raw value meets or exceeds the record.
 
     plot_temperature(station_id,begin_date,end_date)
     station_id = GHCN-D 12-digit id
     begin_date = YYYYMMDD
     end_date - YYYYMMDD
     
-Plot Accumulated Precipitation. For the stations period of record, plot
-- Each year's accumulated precipitation
-- Highlight Max , Min, Average
-- Show current year's progress
-
+Plot Accumulated Precipitation. For the stations period of record, plot each year's accumulated precipitation, along with highlighting the max, min, averagem and current year.
 
     plot_precipitation(station_id)
     station_id = GHCN-D 12-digit id
 
-
-Plot Accumulated Snowfall. For the stations period of record, plot
-- Each year's accumulated snowfall
-- Highlight Max , Min, Average
-- Show current year's progress
-
+Plot Accumulated Snowfall. Same as precip, but start year in October instead of January
 
     plot_snowfall(station_id)
     station_id = GHCN-D 12-digit id
 
 Plot Data Spatially for a given date and Element. Able to specify projection, lat/lon boxes, dpi. Special color maps are made depending on element. Only uses GHCN-D CORE elements.
 
-
     plot_spatial(year,month,day,element)
     element = TMAX/TMIN/TAVG/PRCP/SNOW/SNWD
     
-    
 Special Spatial Plots for derived data. Able to specify projection, lat/lon boxes, dpi. Special color maps are made depending on element. Derived data includes heating, cooling, and growing degree days.
-
 
     plot_spatial_derived(year,month,day,element)
     element = HDD/CDD/GDD
     
 Special Spatial Plots for freeze data. Able to specify projection, lat/lon boxes, dpi. Special color maps are made depending on element. Derived data includes date of last freeze (spring) and date of first freeze (fall).
-
 
     plot_spatial_freeze(year,month,day,element)
     element = LAST/FIRST

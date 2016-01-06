@@ -1,8 +1,6 @@
-# GHCNpy
+# GHCNpy: Weather Station Analysis in Python
 
-###### Weather Station Analysis in Python
-
-GHCNpy pulls in data from the Global Historical Climatology Network - Daily Database
+GHCNpy pulls in data from the Global Historical Climatology Network - Daily Database. Analysis and visualizations are also made
 
 Background
 ------------
@@ -138,7 +136,7 @@ This plots "New York Times" style temperature plots. For a givin station and per
     begin_date = YYYYMMDD
     end_date - YYYYMMDD
     
-Plot Accumulated Precipitation. For the stations period of record, plot each year's accumulated precipitation, along with highlighting the max, min, averagem and current year.
+Plot Accumulated Precipitation. For the stations period of record, plot each year's accumulated precipitation, along with highlighting the max, min, average and current year.
 
     plot_precipitation(station_id)
     station_id = GHCN-D 12-digit id
@@ -155,12 +153,12 @@ Plot Data Spatially for a given date and Element. Able to specify projection, la
     
 Special Spatial Plots for derived data. Able to specify projection, lat/lon boxes, dpi. Special color maps are made depending on element. Derived data includes heating, cooling, and growing degree days.
 
-    plot_spatial_derived(year,month,day,element)
+    plot_spatial_derived(year,element)
     element = HDD/CDD/GDD
     
 Special Spatial Plots for freeze data. Able to specify projection, lat/lon boxes, dpi. Special color maps are made depending on element. Derived data includes date of last freeze (spring) and date of first freeze (fall).
 
-    plot_spatial_freeze(year,month,day,element)
+    plot_spatial_freeze(year,element)
     element = LAST/FIRST
     
 Future Plans

@@ -1,11 +1,11 @@
-#GHCNpy
+# GHCNpy
 
-######Weather Station Analysis in Python
+###### Weather Station Analysis in Python
 
 GHCNpy pulls in data from the Global Historical Climatology Network - Daily Database
 
-=======================================================================
-### Background
+Background
+------------
 
 The Global Historical Climatology Network – Daily data set (GHCN-D) provides a strong foundation of the Earth's climate on the
 daily scale, and is the official archive of daily weather data in the United States. The data set is updated nightly, with new data 
@@ -36,8 +36,8 @@ time series analysis, and visualization of data, from the station to global scal
 
 More Information about GHCN-Daily can be found [here.](ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/)
 
-=======================================================================
-### Installing GHCNpy
+Installing GHCNpy
+------------
 
 GHCNpy should work on Windows, Mac OSX and Linux, however has only been tested in Mac OSX and Linux environments. The code was developed
 using the Python 2.7 Anaconda Python Distribution from Continuum Analytics. The Anaconda Python Distribution can be downloaded here: https://store.continuum.io/cshop/anaconda/
@@ -69,17 +69,131 @@ Once the package has been downloaded to your computer you can setup using this c
     python setup.py install
 
 After installing the package, you can test by using this command:
+
     python test.py
 
 You are now ready to go!
 
-=======================================================================
-### Functions
+Functions
+------------
+There are three major programs used in GHCNpy. It was split up to generalize the three major objects of this package
+
+__io.py (Input/Output of Data):__
+
+Get GHCN-D Version
+
+    get_ghcnd_version()
+    
+Get GHCN-D Data (Station Text File)
+
+    get_data_station(station_id)
+    station_id = GHCN-D 12-digit id
+    
+Get GHCN-D Data (Year Comma Delimited File)
+
+    get_data_year(year)
+    year = Input Year
+
+Get GHCN-D Metadata file (ghcnd-stations.txt)
+
+    get_ghcnd_stations()
+    
+Get GHCN-D Inventory file (ghcnd-inventory.txt)
+
+    get_ghcnd_inventory()
+    
+Output to CSV file
+
+    output_to_csv(station_id)
+    station_id = GHCN-D 12-digit id
+
+Output to CF compliant netCDF file
+
+    output_to_netcdf(station_id)
+    station_id = GHCN-D 12-digit id
+    
+__metadata.py (Get information about the data):__
+
+Search for a station in GHCN-D
+
+    find_station(*args)
+    1 Argument: Search By Name
+    3 Arguments: Search by lat/lon/distance limit
+
+Get Metadata of a station in GHCN-D, using both the metadata file, and the Historical Observing Metadata Repository (HOMR).
+
+The result are the following metadata information (if available)
+- Station Latitude
+- Station Longitude
+- Station Name
+- Station Elevation (meters)
+- US State
+- Climate Division
+- US County
+- National Weather Service Office
+- COOP ID
+- WBAN ID
 
 
+    get_metadata(station_id)
+    station_id = GHCN-D 12-digit id
+    
+__plotting.py (Plot the data):__
 
-=======================================================================
-### Future Plans
+Plot Temperature Time Series
+
+This plots "New York Times" style temperature plots. For a givin station and period, plots the following data
+- Raw TMAX/TMIN for each day
+- Average TMAX/TMIN for each day
+- Record TMAX/TMIN for each day
+- Daily Records (If Raw meets or exceeds record)
+
+
+    plot_temperature(station_id,begin_date,end_date)
+    station_id = GHCN-D 12-digit id
+    begin_date = YYYYMMDD
+    end_date - YYYYMMDD
+    
+Plot Accumulated Precipitation. For the stations period of record, plot
+- Each year's accumulated precipitation
+- Highlight Max , Min, Average
+- Show current year's progress
+
+
+    plot_precipitation(station_id)
+    station_id = GHCN-D 12-digit id
+
+
+Plot Accumulated Snowfall. For the stations period of record, plot
+- Each year's accumulated snowfall
+- Highlight Max , Min, Average
+- Show current year's progress
+
+
+    plot_snowfall(station_id)
+    station_id = GHCN-D 12-digit id
+
+Plot Data Spatially for a given date and Element. Able to specify projection, lat/lon boxes, dpi. Special color maps are made depending on element. Only uses GHCN-D CORE elements.
+
+
+    plot_spatial(year,month,day,element)
+    element = TMAX/TMIN/TAVG/PRCP/SNOW/SNWD
+    
+    
+Special Spatial Plots for derived data. Able to specify projection, lat/lon boxes, dpi. Special color maps are made depending on element. Derived data includes heating, cooling, and growing degree days.
+
+
+    plot_spatial_derived(year,month,day,element)
+    element = HDD/CDD/GDD
+    
+Special Spatial Plots for freeze data. Able to specify projection, lat/lon boxes, dpi. Special color maps are made depending on element. Derived data includes date of last freeze (spring) and date of first freeze (fall).
+
+
+    plot_spatial_freeze(year,month,day,element)
+    element = LAST/FIRST
+    
+Future Plans
+------------
 This is a very ambitious project, and much more will be added, including (but not limited to): 
 
 - Accessing more of GHCN-Daily elements, an extensive list is found [here.](ftp://ftp.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt)
@@ -94,13 +208,6 @@ This is a very ambitious project, and much more will be added, including (but no
 
 - Clean up code, and work on faster runtimes
 
-=======================================================================
-### Contact
-Any questions, comments, bug reports, feature requests, and other inquiries should be sent to jared@cicsnc.org
-
-Installation
+Contact
 ------------
-    python setup.py install (to install)
-
-Setup
------
+Any questions, comments, bug reports, feature requests, and other inquiries should be sent to jared@cicsnc.org

@@ -1,9 +1,16 @@
 import ghcnpy
 
+# Provide introduction
 ghcnpy.intro()
 
-outfile=ghcnpy.get_data_station("USW00003812")
-print outfile
+# Print Latest Version
+ghcnpy.get_ghcnd_version()
 
-outfile2=ghcnpy.get_data_year("2015")
-print outfile2
+# Testing Search Capabilities
+print "\nTESTING SEARCH CAPABILITIES"
+ghcnpy.find_station("Asheville")
+
+# Testing Search Capabilities
+print "\nTESTING PULL CAPABILITIES"
+outfile=ghcnpy.get_data_station("USW00003812")
+print outfile," has been downloaded"

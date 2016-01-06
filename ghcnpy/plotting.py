@@ -12,7 +12,6 @@ from calendar import monthrange
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
-import pandas as pd
 from datetime import datetime, date
 import matplotlib.colors as colors
 import pylab

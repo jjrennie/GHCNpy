@@ -1,9 +1,0 @@
-setup.py
-GHCNpy.egg-info/PKG-INFO
-GHCNpy.egg-info/SOURCES.txt
-GHCNpy.egg-info/dependency_links.txt
-GHCNpy.egg-info/top_level.txt
-ghcnpy/__init__.py
-ghcnpy/io.py
-ghcnpy/metadata.py
-ghcnpy/plotting.py

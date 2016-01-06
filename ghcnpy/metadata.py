@@ -11,7 +11,6 @@ import requests as r
 from calendar import monthrange
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import pandas as pd
 from datetime import datetime, date
 import matplotlib.colors as colors
 import pylab
@@ -28,11 +27,12 @@ def find_station(*args):
   stns=0
   if len(args) ==1:
     station_name=args[0]
-    print "LOOKUP BY STATION NAME: ",station_name          
+    print "LOOKUP BY STATION NAME: ",station_name       
+    station_name=station_name.upper()   
     ghcnd_stations=gp.get_ghcnd_stations()
     
     stns=filter(lambda x: re.search(station_name,x), ghcnd_stations[:,5])
-    print "GHCND ID          LAT        LON    ELEV(m)  ST       STATION NAME"
+    print "GHCND ID          LAT        LON    ELEV  ST       STATION NAME"
     print "###############################################################"
     for station_counter in xrange(len(stns)):
       ghcnd_meta = ghcnd_stations[ghcnd_stations[:,5]== stns[station_counter]]
@@ -48,7 +48,7 @@ def find_station(*args):
     target_latlon = (float(station_lat), float(station_lon))
     ghcnd_stations=gp.get_ghcnd_stations()
     
-    print "GHCND ID          LAT        LON    ELEV(m)  ST       STATION NAME"
+    print "GHCND ID          LAT        LON    ELEV  ST       STATION NAME"
     print "###############################################################"
     for ghcnd_counter in xrange(ghcnd_stations[:,0].size): 
       candidate_latlon=(ghcnd_stations[ghcnd_counter][1], ghcnd_stations[ghcnd_counter][2])

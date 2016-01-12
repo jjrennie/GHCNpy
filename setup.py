@@ -6,7 +6,7 @@ setup(
     author='Jared Rennie, Samuel Lillo',
     author_email='jared@cicsnc.org, splillo@ou.edu',
     packages=find_packages(),
-    url='https://k3.cicsnc.org/jared/GHCNpy',
+    url='https://github.com/jjrennie/GHCNpy/',
     description='Package for Analyzing and Displaying Weather Stations from GHCN-Daily',
     long_description=open('README.md').read(),
     license='New BSD',

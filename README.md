@@ -60,7 +60,7 @@ If these packages are not installed on your system, they will need to be install
 
 Once the packages are installed, you're ready to install GHCNpy. Using git: 
 
-    git clone https://k3.cicsnc.org/jared/GHCNpy.git
+    git clone https://github.com/jjrennie/GHCNpy.git
     
 Once the package has been downloaded to your computer you can setup using this command:
 

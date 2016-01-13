@@ -1,13 +1,15 @@
 # Import Modules
-import numpy as np
+import re
+import os
+import sys
 from ftplib import FTP
-import ghcnpy as gp
 import datetime
 from datetime import date
+
+import numpy as np
 import netCDF4 as nc
-import re
-import os.path
-import sys
+
+import ghcnpy as gp
 
 #################################################
 # MODULE: get_ghcnd_version

@@ -1,20 +1,11 @@
 # Import Modules
-import numpy as np
-import numpy.ma as ma
-import sys
-import time
-import datetime
-import calendar
-import re, json
-from ftplib import FTP
+import re
+import json
+
 import requests as r
-from calendar import monthrange
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-from datetime import datetime, date
-import matplotlib.colors as colors
-import pylab
+
 from geopy.distance import great_circle
+
 import ghcnpy as gp
 
 #################################################

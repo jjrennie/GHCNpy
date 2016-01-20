@@ -11,7 +11,7 @@ setup(
     long_description=open('README.md').read(),
     license='New BSD',
     keywords = "meteorology climatology analysis in_situ",
-    scripts=['ghcnpy/io.py', 'ghcnpy/metadata.py', 'ghcnpy/plotting.py'],
+    scripts=['ghcnpy/iotools.py', 'ghcnpy/metadata.py', 'ghcnpy/plotting.py'],
     data_files = [("", ["LICENSE.txt"])],
     install_requires=[
           'numpy',
